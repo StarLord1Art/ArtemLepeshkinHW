@@ -4,6 +4,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import java.util.concurrent.CompletableFuture;
 import org.app.controller.FilesController;
 import org.app.service.FilesService;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,7 @@ public class FilesControllerMvcTest {
   public void whenGetExistingBucket_thenReturnRootDirectories() throws Exception {
     String mockRootDirectories = "Корневые папки бакета Buck1";
 
-    when(filesService.getRootDirectories("Buck1")).thenReturn(mockRootDirectories);
+    when(filesService.getRootDirectories("Buck1")).thenReturn(CompletableFuture.completedFuture(mockRootDirectories));
 
     mockMvc.perform(get("/root/directories/Buck1")).andExpect(status().isOk());
   }
