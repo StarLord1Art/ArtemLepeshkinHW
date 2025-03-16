@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import lombok.extern.slf4j.Slf4j;
 import org.app.aspect.ControllersLoggingAspect;
+import org.app.controller.response.FileInfoResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ public class AspectTest {
   @Test
   public void shouldIncreaseClassFieldByTwoAspectTest() {
     int fieldValueBeforeExecution = controllersLoggingAspect.getExecutionCount();
-    String response = restTemplate.getForObject("http://localhost:" + port + "/files/info/3/5", String.class);
-    log.info(response);
+    FileInfoResponse response = restTemplate.getForObject("http://localhost:" + port + "/files/info/3/5", FileInfoResponse.class);
+    log.info(response.fileName());
 
     assertEquals(fieldValueBeforeExecution + 2, controllersLoggingAspect.getExecutionCount());
   }

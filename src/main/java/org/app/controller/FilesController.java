@@ -5,6 +5,7 @@ import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import org.app.controller.request.DirectoryInfoRequest;
+import org.app.controller.response.FileInfoResponse;
 import org.app.exception.NoSuchFileException;
 import org.app.service.FilesService;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class FilesController implements FilesOperations {
   private final FilesService filesService;
 
   @Override
-  public ResponseEntity<String> getFileInfo(String fileId, String userId)
+  public ResponseEntity<FileInfoResponse> getFileInfo(long fileId, String userId)
       throws NoSuchFileException {
     return ResponseEntity.ok(filesService.getFileInfo(fileId, userId));
   }

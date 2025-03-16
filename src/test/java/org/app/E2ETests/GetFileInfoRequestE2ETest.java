@@ -1,8 +1,8 @@
 package org.app.E2ETests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.app.controller.response.FileInfoResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +26,11 @@ public class GetFileInfoRequestE2ETest {
 
   @Test
   public void getFileInfoRequestE2ETest() {
-    ResponseEntity<String> response = testRestTemplate.getForEntity("http://localhost:" + port + "/files/info/3/1", String.class);
+    ResponseEntity<FileInfoResponse> response = testRestTemplate.getForEntity("http://localhost:" + port + "/files/info/3/1", FileInfoResponse.class);
     assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertTrue(response.getBody().contains("Информация о файле с ID 3 пользователя 1"));
+    assertEquals(3, response.getBody().fileId());
+    assertEquals("QWERTY.txt", response.getBody().fileName());
+    assertEquals("7387gfd", response.getBody().fileOwnerId());
+    assertEquals("common", response.getBody().fileAccessLevel());
   }
 }
