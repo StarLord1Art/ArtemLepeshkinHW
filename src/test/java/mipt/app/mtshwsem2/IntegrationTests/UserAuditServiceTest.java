@@ -1,14 +1,15 @@
 package mipt.app.mtshwsem2.IntegrationTests;
 
 import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
 import java.util.UUID;
+import mipt.app.mtshwsem2.dto.UserAuditDto;
 import mipt.app.mtshwsem2.exception.UserNotFoundException;
 import mipt.app.mtshwsem2.service.Action;
 import mipt.app.mtshwsem2.service.UserAuditService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,34 +48,28 @@ class UserAuditServiceTest {
     System.out.println("Cassandra container port: " + cassandraContainer.getMappedPort(9042));
   }
 
-  @BeforeEach
-  void setUp() {
-    userAuditService.initializeKeyspace();
-    userAuditService.initializeTable();
-  }
-
   @Test
   void shouldSuccessfullyCreateAudit() {
-    userAuditService.createEventAudit(uuid, Action.DELETE);
+    userAuditService.createEventAudit(uuid, Action.UPDATE, "Test message UPDATE from user");
   }
 
   @Test
   void shouldFailToCreateAuditWithNullUuid() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> userAuditService.createEventAudit(null, Action.DELETE));
+        () -> userAuditService.createEventAudit(null, Action.DELETE, "Test message DELETE from user"));
   }
 
   @Test
   void shouldFailToCreateAuditWithNullAction() {
     assertThrows(
-        IllegalArgumentException.class, () -> userAuditService.createEventAudit(uuid, null));
+        IllegalArgumentException.class, () -> userAuditService.createEventAudit(uuid, null, "Test message DELETE from user"));
   }
 
   @Test
   void shouldSuccessfullyGetAudit() throws UserNotFoundException {
-    String result = userAuditService.readUserAudit(uuid);
-    Assertions.assertEquals("User UPDATE from IP 192.168.1.1", result);
+    List<UserAuditDto> result = userAuditService.readUserAudit(uuid);
+    assertEquals(uuid, result.getFirst().userId());
   }
 
   @Test
