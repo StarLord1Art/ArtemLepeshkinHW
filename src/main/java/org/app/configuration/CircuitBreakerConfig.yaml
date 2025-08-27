@@ -1,0 +1,8 @@
+resilience4j.circuitbreaker:
+  instances:
+    apiCircuitBreaker:
+      failure rate threshold: 50
+      wait duration in open state: 10s
+      permitted number of calls in half open state: 3
+      sliding window type: count_based
+      sliding window size: 10
